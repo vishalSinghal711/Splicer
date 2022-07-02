@@ -1,0 +1,32 @@
+{
+  "name": "Splicer",
+  "version": "1.0.0",
+  "description": "This is B2C connecting Application",
+  "main": "src/server.js",
+  "scripts": {
+    "deploy": "pm2 start src/server.js -i max",
+    "start": "node src/server.js",
+    "watch": "nodemon src/server.js",
+    "test": "jest",
+    "test-watch": "jest --watchAll --detectOpenHandles"
+  },
+  "keywords": [
+    ""
+  ],
+  "author": "Vishal Singhal",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "",
+    "dotenv": "",
+    "express": "",
+    "mongoose": "",
+    "morgan": "",
+    "pm2": "",
+    "supertest": ""
+  },
+  "devDependencies": {
+    "chalk": "",
+    "jest": "^28.1.0",
+    "nodemon": ""
+  }
+}
