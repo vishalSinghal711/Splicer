@@ -1,0 +1,11 @@
+.git/
+.updatebot.yml
+.helmignore
+jenkins-x.yml
+OWNERS
+OWNERS_ALIASES
+watch.sh
+*.log
+.gitignore
+.DS_Store
+tests

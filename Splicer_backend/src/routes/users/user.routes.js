@@ -17,8 +17,8 @@ router.post("/register", register);
 //if /login type request will be made this will take control
 router.post("/login", login);
 
-
-router.post("/update/:user_id" , updateUser)
+//PATCH is a method of modifying resources where the client sends partial data that is to be updated without modifying the entire data.
+router.patch("/update/:user_id" , updateUser)
 
 
 module.exports = router;

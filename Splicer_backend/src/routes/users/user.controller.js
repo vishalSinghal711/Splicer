@@ -77,6 +77,7 @@ const userControllerMethods = {
 
   //*Update Functionality
   updateUser: async function (request, response) {
+  
     //extracting which user has to update
     if (!Number(request.params.user_id)) {
       response.status(400).json({ message: "Parameter must be a Number.." });
@@ -86,8 +87,6 @@ const userControllerMethods = {
     // extracting request body where user details are posted
     //automatically converts json to obj using middleware json
     let userObject = request.body;
-
-    console.log(userObject);
 
     const promiseSlip = updateUserModel(userObject, request.params.user_id);
 
