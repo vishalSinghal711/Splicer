@@ -38,7 +38,6 @@ app.use((request, response, next) => {
 app.use("/v1/", require("./routes/users/user.routes")); // / root or Home
 app.use("/v1/", require("./routes/categories/category.routes"));
 app.use("/v1/", require("./routes/subcategories/subcategory.routes"));
-app.use('/v1/', require('./routes/vendors/vendor.routes'));
 
 //now app knows how to handle requests and responses but it needs some place where it can work on those requests or where these requests will be listened
 

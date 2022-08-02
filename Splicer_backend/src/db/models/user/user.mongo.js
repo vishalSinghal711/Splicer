@@ -12,10 +12,13 @@ const userSchema = new Schema(
       unique: true,
       required: [true, 'User Id is Mandatory'],
     },
+    is_vendor: {
+      type: Boolean,
+      default: false,
+    },
     vendor_id: {
       type: Number,
       default: null,
-      ref: 'Vendor',
     },
     first_name: {
       trim: true,
@@ -86,7 +89,18 @@ const userSchema = new Schema(
 );
 
 //! hooks
-userSchema.pre('validate', async function (next) {});
+userSchema.pre('validate', async function (next) {
+  console.log('pre-validate');
+  if (
+    !(
+      (this.is_vendor == false && this.vendor_id == null) ||
+      (this.is_vendor == true && this.vendor_id != null)
+    )
+  ) {
+    throw new Error('vendor_id must be null if not vendor');
+  }
+  next();
+});
 userSchema.post('validate', async function (next) {
   console.log('post-validate');
   // next();
@@ -109,8 +123,11 @@ userSchema.post('save', async function (next) {
   console.log('post-save');
   // next();
 });
-userSchema.pre('updateOne', async function (next) {});
-userSchema.post('updateOne', async function (next) {});
+userSchema.pre('updateOne', async function (next) {
+  
+});
+userSchema.post('updateOne', async function (next) {
+});
 
 //! methods
 userSchema.methods.matchPassword = async function (enteredPassword) {
@@ -139,13 +156,14 @@ userSchema.statics.addUser = async function (user) {
     console.log(e);
   }
 };
-userSchema.statics.updateUser = async function (vendorObject, id) {
-  const vendorWithID = await this.findOne({ _id: id, user_id: id });
-
-  //! Shallow Merging of updates and existing object
-  const newVendor = { ...vendorWithID._doc, ...vendorObject };
-
-  await this.updateOne({ _id: id }, newVendor, { runValidators: true });
+userSchema.statics.updateUser = async function (userDetails, id) {
+  const user = await this.findOne({ _id: id, user_id: id });
+  const newUser = { ...user._doc, ...userDetails };
+  user.is_vendor = newUser['is_vendor'];
+  const ans = await user.save();
+  if (ans) {
+    await this.updateOne({ _id: id }, newUser, { runValidators: true });
+  }
 };
 
 //! virtuals
