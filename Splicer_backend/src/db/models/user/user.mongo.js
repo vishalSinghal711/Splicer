@@ -81,6 +81,10 @@ const userSchema = new Schema(
         message: 'User DOB must be after Dec-31-1949 and before current Date',
       },
     },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true },
 );

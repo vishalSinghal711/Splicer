@@ -15,6 +15,7 @@ const vendorSchema = new Schema(
     business_id: {
       type: Number,
       default: null,
+      ref : 'Business'
     },
     alt_phn_no: {
       type: String,
