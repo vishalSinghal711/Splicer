@@ -16,17 +16,19 @@
   "author": "Vishal Singhal",
   "license": "ISC",
   "dependencies": {
+    "all": "^0.0.0",
+    "bcrypt": "",
     "cors": "",
     "dotenv": "",
     "express": "",
-    "mongoose": "",
+    "mongoose": "*",
     "morgan": "",
     "pm2": "",
-    "supertest": ""
+    "supertest": "*"
   },
   "devDependencies": {
     "chalk": "",
-    "jest": "^28.1.0",
+    "jest": "",
     "nodemon": ""
   }
 }

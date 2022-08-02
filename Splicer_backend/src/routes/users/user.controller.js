@@ -1,5 +1,5 @@
 //! The path module provides utilities for working with file and directory paths.
-const path = require("path");
+const path = require('path');
 
 // reequiring model methods which talks to DB for User Operations
 const {
@@ -7,7 +7,7 @@ const {
   addUser,
   checkUser,
   updateUserModel,
-} = require("../../db/models/user/user.model");
+} = require('../../db/models/user/user.model');
 
 const userControllerMethods = {
   //*Register Functionality
@@ -53,41 +53,39 @@ const userControllerMethods = {
     // extracting request body where user details are posted
     let userObjectJS = request.body;
 
-    if (!userObjectJS["phn_no"] || !userObjectJS["password"]) {
-      response.status(400).json({ message: "Both Fields are mandatory.." });
+    if (!userObjectJS['phn_no'] || !userObjectJS['password']) {
+      response.status(400).json({ message: 'Both Fields are mandatory..' });
       return;
     }
 
     const promiseToLogin = checkUser(userObjectJS);
 
     promiseToLogin
-      .then(function (userDetails) {
+      .then(async function (userDetails) {
         if (!userDetails) {
           response
             .status(201)
-            .json({ message: "User not found, Please Register yourself.." });
-        } else if (userObjectJS["password"] === userDetails["password"]) {
+            .json({ message: 'User not found, Please Register yourself..' });
+        } else if (await userDetails.matchPassword(userObjectJS['password'])) {
           response.status(200).json({ message: userDetails });
         } else {
-          response.status(201).json({ message: "Password is Incorrect.." });
+          response.status(201).json({ message: 'Password is Incorrect..' });
         }
       })
-      .catch((err) => response.status(401).json({ msg: err }));
+      .catch((err) => response.status(401).json({ msg: err.message }));
   },
 
   //*Update Functionality
   updateUser: async function (request, response) {
     //extracting which user has to update
     if (!Number(request.params.user_id)) {
-      response.status(400).json({ message: "Parameter must be a Number.." });
+      response.status(400).json({ message: 'Parameter must be a Number..' });
       return;
     }
 
     // extracting request body where user details are posted
     //automatically converts json to obj using middleware json
     let userObject = request.body;
-
-    console.log(userObject);
 
     const promiseSlip = updateUserModel(userObject, request.params.user_id);
 
