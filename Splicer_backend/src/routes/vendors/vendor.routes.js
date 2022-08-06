@@ -14,6 +14,6 @@ const router = express.Router({});
 router.post('/vendor/register/:user_id', registerVendor);
 
 //PATCH is a method of modifying resources where the client sends partial data that is to be updated without modifying the entire data.
-router.patch('/vendor/update/:user_id', updateVendor);
+router.patch('/vendor/profile/update/:user_id', updateVendor);
 
 module.exports = router;

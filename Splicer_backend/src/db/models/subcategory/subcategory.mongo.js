@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const subCategory = new Schema({
+  _id: Number,
   id: {
     unique: true,
     type: Number,

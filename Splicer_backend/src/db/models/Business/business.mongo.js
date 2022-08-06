@@ -66,10 +66,7 @@ const businessSchema = new Schema(
     business_reviews: {
       type: Array,
       default: null,
-    },
-    business_ratings: {
-      type: Array,
-      default: null,
+      ref: 'Review',
     },
     is_verified: {
       type: Boolean,
@@ -112,7 +109,6 @@ businessSchema.post('updateOne', async function (next) {});
 
 //! statics
 businessSchema.statics.addBusiness = async function (business) {
-  console.log('business Came = ', business);
   try {
     const businessCreated = await this.create({
       _id: business.business_id,
@@ -133,7 +129,14 @@ businessSchema.statics.addBusiness = async function (business) {
   }
 };
 businessSchema.statics.updateBusiness = async function (newbusiness, id) {
-  await this.updateOne({ _id: id }, newbusiness, { runValidators: true });
+  try {
+    const result = await this.updateOne({ _id: id }, newbusiness, {
+      runValidators: true,
+    });
+    return newbusiness;
+  } catch (err) {
+    throw err;
+  }
 };
 
 //! virtuals

@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const bcrypt = require('bcrypt');
 const { isEmail, isNumeric, isAfter, isBefore } = require('validator');
 const { defaultUserImage } = require('../../../constant');
+const responses = require('../../../responses.strings');
 
 const userSchema = new Schema(
   {
@@ -81,6 +82,8 @@ const userSchema = new Schema(
         message: 'User DOB must be after Dec-31-1949 and before current Date',
       },
     },
+
+    //if a user doing some bad work on app like posting abusive reviews
     status: {
       type: Boolean,
       default: true,
@@ -140,16 +143,16 @@ userSchema.statics.addUser = async function (user) {
     });
     return userCreated;
   } catch (e) {
-    console.log(e);
+    throw e;
   }
 };
-userSchema.statics.updateUser = async function (vendorObject, id) {
-  const vendorWithID = await this.findOne({ _id: id, user_id: id });
-
-  //! Shallow Merging of updates and existing object
-  const newVendor = { ...vendorWithID._doc, ...vendorObject };
-
-  await this.updateOne({ _id: id }, newVendor, { runValidators: true });
+userSchema.statics.updateUser = async function (userObject, id) {
+  try {
+    await this.updateOne({ _id: id }, userObject, { runValidators: true });
+    return userObject;
+  } catch (err) {
+    return err;
+  }
 };
 
 //! virtuals

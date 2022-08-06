@@ -1,5 +1,6 @@
 //! The path module provides utilities for working with file and directory paths.
 const path = require('path');
+const responses = require('../../responses.strings');
 
 // reequiring model methods which talks to DB for User Operations
 const {
@@ -19,33 +20,15 @@ const userControllerMethods = {
     //converted that js object to user object
     const reqUser = await User.prototype.toUser(userObject);
 
-    //doing some validations about mandatory fields before actually putting to mongo
-    const { status, results } = reqUser.validateUser();
-
-    //if validated
-    if (status) {
-      //get promise to addUser , returned by user.model.js -> addUser
-      const promiseToAdd = addUser(reqUser);
-      promiseToAdd
-        .then(({ res }) => {
-          //! WAY TO SEND FILES from server TO CLIENT using path
-          // let image = path.join(
-          //   __dirname,
-          //   "..",
-          //   "..",
-          //   "assets",
-          //   "customer.png"
-          // );
-
-          // response.status(201).json({ message: "Registered Successfully" });
-          response.status(201).send(res);
-        })
-        .catch(({ res }) => {
-          response.status(400).json({ message: `${res}` });
-        });
-    } else {
-      response.status(400).json({ message: `${results}` });
-    }
+    const promiseToAdd = addUser(reqUser);
+    promiseToAdd
+      .then((res) => {
+        response.status(201).json({ message: res });
+        // response.status(201).send(res);
+      })
+      .catch((res) => {
+        response.status(400).json({ message: res.message });
+      });
   },
 
   //*Login Functionality
@@ -54,7 +37,9 @@ const userControllerMethods = {
     let userObjectJS = request.body;
 
     if (!userObjectJS['phn_no'] || !userObjectJS['password']) {
-      response.status(400).json({ message: 'Both Fields are mandatory..' });
+      response
+        .status(400)
+        .json({ message: `${responses.USERNAME_PASSWORD_MANDATORY}` });
       return;
     }
 
@@ -62,24 +47,18 @@ const userControllerMethods = {
 
     promiseToLogin
       .then(async function (userDetails) {
-        if (!userDetails) {
-          response
-            .status(201)
-            .json({ message: 'User not found, Please Register yourself..' });
-        } else if (await userDetails.matchPassword(userObjectJS['password'])) {
-          response.status(200).json({ message: userDetails });
-        } else {
-          response.status(201).json({ message: 'Password is Incorrect..' });
-        }
+        response.status(200).json({ message: userDetails });
       })
-      .catch((err) => response.status(401).json({ msg: err.message }));
+      .catch((err) => response.status(401).json({ msg: err }));
   },
 
   //*Update Functionality
   updateUser: async function (request, response) {
     //extracting which user has to update
     if (!Number(request.params.user_id)) {
-      response.status(400).json({ message: 'Parameter must be a Number..' });
+      response
+        .status(400)
+        .json({ message: `${responses.PARAMETER_NOT_NUMBER}` });
       return;
     }
 

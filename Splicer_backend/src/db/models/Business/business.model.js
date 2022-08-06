@@ -6,6 +6,7 @@
 const BusinessModel = require('./business.mongo');
 const UserModel = require('../user/user.mongo');
 const VendorModel = require('../vendor/vendor.mongo');
+const responses = require('../../../responses.strings');
 
 const Business = function (
   business_id,
@@ -51,10 +52,41 @@ Business.prototype.toBusiness = async function (business) {
 };
 
 // Add Business
-const addBusiness = function (business) {
+const addBusiness = function (business, user_id) {
   return new Promise(async function (resolve, reject) {
     try {
-      resolve(await BusinessModel.addBusiness(business));
+      //if user is already a vendor
+      let user = await UserModel.findOne({ _id: user_id });
+
+      if (!user) {
+        reject(`${responses.USER_NOT_FOUND}`);
+      } else {
+        if (!user.status) {
+          reject(`${responses.USER_BLOCKED}`);
+        }
+        if (user.vendor_id == null) {
+          reject(`${responses.USER_MUST_BE_VENDOR_TO_ADD_BUSINESS}`);
+        } else {
+          let vendor = await VendorModel.findOne({ _id: user.vendor_id });
+          if (vendor) {
+            //do function work
+            try {
+              let result = await BusinessModel.addBusiness(business);
+              vendor.business_ids.push(result.business_id);
+              try {
+                const resultSave = await vendor.save();
+                resolve(resultSave);
+              } catch (err) {
+                reject(err);
+              }
+            } catch (err) {
+              reject(err);
+            }
+            //find user with user_id in params
+            //update vendor_id in it
+          }
+        }
+      }
     } catch (err) {
       reject(err);
     }
@@ -62,36 +94,57 @@ const addBusiness = function (business) {
 };
 
 // Update a Business
-const updateBusiness = async function (BusinessObject, user_id) {
-  const userWithId = await UserModel.findOne({ _id: user_id });
-
+const updateBusiness = async function (businessObject, user_id, businessId) {
   return new Promise(async (resolve, reject) => {
     try {
-      if (userWithId) {
-        const vendorWithId = await VendorModel.findOne({
-          _id: userWithId.vendor_id,
-        });
-        if (vendorWithId) {
-          const businessWithID = await BusinessModel.findOne({
-            Business_id: vendorWithId.business_id,
-          });
-          if (businessWithID) {
-            //! Shallow Merging of updates and existing object
-            const newBusiness = { ...businessWithID._doc, ...BusinessObject };
-            resolve(
-              await BusinessModel.updateBusiness(
-                newBusiness,
-                businessWithID._id,
-              ),
-            );
-          } else {
-            reject('No Business Exist');
+      const userWithId = await UserModel.findOne({ _id: user_id });
+      if (!userWithId) {
+        reject(`${responses.USER_NOT_FOUND}`);
+      }
+      if (!userWithId.status) {
+        reject(`${responses.USER_BLOCKED}`);
+      }
+      if (!userWithId.vendor_id) {
+        reject(`${responses.USER_MUST_BE_VENDOR_TO_UPDATE_BUSINESS}`);
+      }
+      const vendorWithId = await VendorModel.findOne({
+        _id: userWithId.vendor_id,
+      });
+      if (vendorWithId) {
+        const businesses = vendorWithId.business_ids;
+        if (!businesses) {
+          reject(
+            `${responses.USER_MUST_HAVE_ATLEAST_ONE_BUSINESS_TO_UPDATE_BUSINESS}`,
+          );
+        }
+        if (businesses.includes(businessId)) {
+          try {
+            const old = await BusinessModel.findOne({ _id: businessId });
+            const newBusiness = { ...old._doc, ...businessObject };
+            await BusinessModel.updateBusiness(newBusiness, businessId);
+          } catch (err) {
+            reject(err);
           }
         } else {
-          reject('No Vendor Exist');
+          reject(`${responses.BUSINESS_NOT_BELONGS_TO_VENDOR}`);
         }
       } else {
-        reject('No User Exist');
+        reject(`${responses.USER_MUST_BE_VENDOR_TO_UPDATE_BUSINESS}`);
+      }
+
+      if (vendorWithId) {
+        const businessWithID = await BusinessModel.findOne({
+          Business_id: vendorWithId.business_id,
+        });
+        if (businessWithID) {
+          //! Shallow Merging of updates and existing object
+          const newBusiness = { ...businessWithID._doc, ...businessObject };
+          resolve(
+            await BusinessModel.updateBusiness(newBusiness, businessWithID._id),
+          );
+        } else {
+          reject('No Business Exist');
+        }
       }
     } catch (err) {
       reject(err);

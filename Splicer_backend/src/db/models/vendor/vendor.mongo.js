@@ -11,12 +11,15 @@ const vendorSchema = new Schema(
       unique: true,
       required: [true, 'Vendor Id is Mandatory'],
     },
-    //fk
-    business_id: {
-      type: Number,
+
+    //fk - one vendor can have multiple business
+    business_ids: {
+      type: Array,
       default: null,
-      ref : 'Business'
+      ref: 'Business',
     },
+
+    //business phn No
     alt_phn_no: {
       type: String,
       unique: true,
@@ -25,29 +28,61 @@ const vendorSchema = new Schema(
       maxLength: [10, 'Phone Number must be of Length 10'],
       validate: [isNumeric, 'Must contain Only Numbers'],
     },
+
+    //business Email
     alt_email: {
       type: String,
       trim: true,
       lowercase: true,
       validate: [isEmail, 'Please Enter Valid Email Address'],
     },
+
+    //otp check of business phn
     alt_phn_no_status: {
       type: Boolean,
       default: false,
     },
+
+    //otp check email
     alt_email_status: {
       type: Boolean,
       default: false,
     },
+
+    //reviews for this particular reviews
     vendor_reviews: {
-      type: Array,
+      type: Array, // of type Review model
+      ref: 'Review',
       default: null,
     },
-    vendor_rating: {
-      type: Number,
-      default: 0.0,
-    },
 
+    vendor_about: {
+      type: String,
+      default: '',
+    },
+    timing: {
+      type: String,
+      required: [true, 'must have to provide the timings of vendor'],
+    },
+    subscription_attempt: {
+      type: Array,
+      ref: 'SubsciptionAttempt',
+      default: null,
+    },
+    transactions: {
+      type: Array,
+      ref: 'Transaction',
+      default: null,
+    },
+    package_expiry: {
+      type: Date,
+      default: null,
+    },
+    activated_package: {
+      type: Number,
+      ref: 'Package',
+      default: null,
+    },
     status: {
       type: Boolean,
       default: false,
@@ -56,6 +91,8 @@ const vendorSchema = new Schema(
       type: Boolean,
       default: false,
     },
+
+    //timing about
   },
   { timestamps: true },
 );
@@ -97,24 +134,28 @@ vendorSchema.methods.matchPassword = async function (enteredPassword) {
 
 //! statics
 vendorSchema.statics.addVendor = async function (vendor) {
-  console.log('Vendor Came = ', vendor);
   try {
     const vendorCreated = await this.create({
       _id: vendor.vendor_id,
       vendor_id: vendor.vendor_id,
       alt_email_id: vendor.alt_email_id,
       alt_phn_no: vendor.alt_phn_no,
+      timing: vendor.timing,
     });
     return vendorCreated;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 };
-vendorSchema.statics.updateUser = async function (vendorDetails, id) {
-  const vendor = await this.findOne({ _id: id, user_id: id });
-  const newVendor = { ...vendor._doc, ...vendorDetails };
-  await this.updateOne({ _id: id }, newVendor, { runValidators: true });
+vendorSchema.statics.updateVendor = async function (vendorDetails, vendorId) {
+  try {
+    const ans = await this.updateOne({ _id: vendorId }, vendorDetails, {
+      runValidators: true,
+    });
+    return vendorDetails;
+  } catch (err) {
+    return err;
+  }
 };
 
 //! virtuals
