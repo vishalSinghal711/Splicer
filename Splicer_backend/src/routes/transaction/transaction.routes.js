@@ -8,8 +8,8 @@ const router = express.Router({});
 
 // Post request made by user to subsrbibe for a package to become vendor
 //if /transaction/:user_id type request will be made this will take control
-router.post('/transaction/:user_id', subscribePackage);
+router.post('/transaction/subscribe/:user_id', subscribePackage);
 
-router.put('/transaction/update_status/:user_id', updateStatus);
+router.post('/transaction/update_status/:user_id', updateStatus);
 
 module.exports = router;

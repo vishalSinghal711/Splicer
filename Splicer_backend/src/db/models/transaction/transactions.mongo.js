@@ -8,7 +8,6 @@ const transactions_Schema = new Schema({
   },
   user_id: {
     type: Number,
-    unique: [true, 'user_id must be unique'],
     required: [true, 'user_id required'],
   },
   amount: {
@@ -25,7 +24,6 @@ const transactions_Schema = new Schema({
   order_id: {
     type: String,
     unique: [true],
-    default: null,
   },
   status: {
     type: Boolean,
@@ -33,29 +31,91 @@ const transactions_Schema = new Schema({
   },
   payment_id: {
     type: String,
-    unique: [true],
     default: null,
   },
+  currency: {
+    type: String,
+    default: 'INR',
+  },
 });
-
 //! hooks
+
+//! methods
+transactions_Schema.methods.createOrder = async function () {
+  try {
+    const Razorpay = require('razorpay');
+    var instance = new Razorpay({
+      key_id: `${process.env.RAZORPAY_KEY}`,
+      key_secret: `${process.env.RAZORPAY_SECRET}`,
+    });
+
+    var options = {
+      amount: this.amount, // amount in the smallest currency unit(paise in INR)
+      currency: this.currency,
+      receipt: `user_${this.user_id}_transaction_${this._id}`,
+    };
+    try {
+      const orderId = await instance.orders.create(options);
+      try {
+        this.order_id = orderId.id;
+        await this.save();
+      } catch (err) {
+        throw err;
+      }
+
+      return orderId;
+    } catch (err) {
+      throw err; // error
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+transactions_Schema.methods.matchSignature = async function (
+  payment_id,
+  signature,
+) {
+  try {
+    var crypto = require('crypto');
+    var expectedSignature = crypto
+      .createHmac('sha256', process.env.RAZORPAY_SECRET)
+      .update(`${this.order_id}|${payment_id}`)
+      .digest('hex');
+
+    if (expectedSignature == signature) {
+      this.status = true;
+      await this.save();
+      return 'Payment is Successfull';
+    } else {
+      return false;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
 
 //! Statics
 transactions_Schema.statics.createTransaction = async function (
   userId,
-  { amt },
+  { price },
 ) {
   try {
-    const prevCount = await this.findOne({}).sort('_id');
+    let prevCount = await this.find({});
+    prevCount = prevCount.length;
+
+    const amountPaise = parseInt(price) * 100;
+    console.log('amt', amountPaise, 'prevCount', prevCount);
+
     try {
       const transaction = await this.create({
         _id: prevCount + 1,
         transaction_id: prevCount + 1,
-        amount: amt,
-        user_id: userId,
+        amount: amountPaise,
+        user_id: parseInt(userId),
       });
       return transaction;
     } catch (err) {
+      console.log(err);
       throw err;
     }
   } catch (err) {

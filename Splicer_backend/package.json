@@ -21,7 +21,7 @@
     "cors": "",
     "dotenv": "",
     "express": "",
-    "mongoose": "*",
+    "mongoose": "^6.5.1",
     "morgan": "",
     "pm2": "",
     "razorpay": "^2.8.3",

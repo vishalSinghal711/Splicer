@@ -1,4 +1,7 @@
 const responses = {
+  //GENERAL
+  NOT_AUTHORISED: 'NOT_AUTHORISED',
+
   //user
 
   //during login
@@ -32,5 +35,7 @@ const responses = {
   NO_BUSINESS_EXIST: 'no_business_exist',
   WRONG_PACKAGE_ID: 'wrong_package_id',
   PACKAGE_BLOCKED: 'package_blocked',
+
+  NO_TRANSACTION_EXIST: 'NO_TRANSACTION_EXIST'.toLowerCase(),
 };
 module.exports = responses;
