@@ -28,9 +28,9 @@ B2B Connecting Application
 
 # Some Images
 
-## Register
+## Register Form with validations
 ![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/registration_Joined.jpg)
-## Login
+## Login Form with validations
 ![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/login%20joined.jpg)
 
 ---
