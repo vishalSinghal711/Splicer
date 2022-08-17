@@ -1,5 +1,5 @@
 # Splicer
-A Project that Provides local search for different services to make Vendor Business more scalable and Consumer life easier.
+#### A Project that Provides local search for different services to make Vendor Business more scalable and Consumer life easier. 
 ---
 
 # Prerequisites
