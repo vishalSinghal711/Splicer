@@ -2,6 +2,15 @@
 #### A Project that Provides local search for different services to make Vendor Business more scalable and Consumer life easier. 
 ---
 
+# Details
+<object data="https://drive.google.com/file/d/1REAEl805ZbOgP2BuLJh5pNmZYQwRNAHr/view?usp=sharing" type="application/pdf" width="700px" height="700px">
+    <embed src="http://yoursite.com/the.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://drive.google.com/file/d/1REAEl805ZbOgP2BuLJh5pNmZYQwRNAHr/view?usp=sharing">Download PDF</a>.</p>
+    </embed>
+</object>
+
+---
+
 # Prerequisites
  - Download and install current Stable version of Node.js from [here](https://nodejs.org/en/download/) 
  - Check for current version of npm and Node.js
