@@ -8,7 +8,7 @@ export default function Categories() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:2345/categories")
+      .get(process.env.REACT_APP_CATEGORIES)
       .then(({ data }) => setCategories(data.message));
   }, []);
 

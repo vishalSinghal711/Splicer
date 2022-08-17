@@ -64,7 +64,12 @@ const checkUser = function (reqUser) {
       }
       const bool = await user.matchPassword(reqUser['password']);
       if (bool) {
-        resolve(user);
+        try {
+          const jwtToken = await user.generateAuthToken();
+          resolve(jwtToken);
+        } catch (err) {
+          reject(err);
+        }
       } else {
         reject(`${responses.INCORRECT_PASSWORD}`);
       }
@@ -87,7 +92,13 @@ const updateUserModel = async function (userObject, id) {
       }
       //! Shallow Merging of updates and existing object
       const newUser = { ...userWithID._doc, ...userObject };
-      resolve(await UserModel.updateUser(newUser, id));
+      const user = await UserModel.updateUser(newUser, id);
+      if (user) {
+        const userWithID = await UserModel.findOne({ _id: id });
+        resolve(await userWithID.generateAuthToken());
+      } else {
+        reject(user);
+      }
     } catch (err) {
       reject(err);
     }

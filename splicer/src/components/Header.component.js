@@ -2,8 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import MenuIcon from "@material-ui/icons/Menu";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function Header(props) {
+  const navigator = useNavigate();
+
   return (
     // logo
     <Container>
@@ -67,7 +70,11 @@ export function Header(props) {
         <AdvertiseBtn>
           <p>Advertise</p>
         </AdvertiseBtn>
-        <ListingBtn>
+        <ListingBtn
+          onClick={() => {
+            navigator("/app/favourites");
+          }}
+        >
           <p>Listing</p>
         </ListingBtn>
       </ButtonGroup>

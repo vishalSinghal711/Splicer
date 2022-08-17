@@ -8,7 +8,7 @@ function SubCategories() {
   var [subCategories, setSubCategories] = useState({});
 
   useEffect(() => {
-    axios.get("http://localhost:2345/subcategories").then(({ data }) => {
+    axios.get(process.env.REACT_APP_SUB_CATEGORIES).then(({ data }) => {
       var obj = {};
       data.message.forEach((element) => {
         if (obj[`${element.parent_id}`] != null) {

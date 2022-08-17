@@ -12,6 +12,7 @@ function LoginForm() {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const [isRejected, setIsRejected] = useState(false);
   const navigator = useNavigate();
 
   // ⏳renders on form error change
@@ -31,10 +32,10 @@ function LoginForm() {
       setIsSubmit(true);
       try {
         axios
-          .post("http://localhost:2345/login", formValues)
+          .post(process.env.REACT_APP_LOGIN_URL, formValues)
           .then(({ data, status }) => {
             if (status == 200) {
-              navigator("/app/home", { state: data });
+              navigator("/dashboard/home", { replace: true, state: data });
             } else {
               setFormErrors({ password: `${data.message}` });
             }
@@ -105,7 +106,11 @@ function LoginForm() {
   };
 
   return isSubmit ? (
-    <Loader></Loader>
+    isRejected ? (
+      <div></div>
+    ) : (
+      <Loader></Loader>
+    )
   ) : (
     <MainFormDiv>
       <Form onSubmit={handleSubmit}>
@@ -153,7 +158,7 @@ function LoginForm() {
       <ButtonWrapper>
         <Maybe
           onClick={() => {
-            navigator("/home/home");
+            navigator("/dashboard/home", { replace: true });
           }}
         >
           Maybe Later

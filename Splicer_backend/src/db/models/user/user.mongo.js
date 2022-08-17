@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { isEmail, isNumeric, isAfter, isBefore } = require('validator');
 const { defaultUserImage } = require('../../../constant');
 const responses = require('../../../responses.strings');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new Schema(
   {
@@ -123,6 +124,26 @@ userSchema.post('updateOne', async function (next) {});
 userSchema.methods.matchPassword = async function (enteredPassword) {
   console.log('methods matchPassword');
   return this.password === enteredPassword;
+};
+userSchema.methods.generateAuthToken = function () {
+  try {
+    const token = jwt.sign(
+      {
+        id: this.user_id,
+        first_name: this.first_name,
+        last_name: this.last_name,
+        gender: this.gender,
+        email_id: this.email_id,
+        phn_no: this.phn_no,
+        profile_pic: this.profile_pic,
+        dob: this.dob,
+      },
+      process.env.JWT_PRIVATE_KEY,
+    );
+    return token;
+  } catch (err) {
+    return err;
+  }
 };
 
 //! statics

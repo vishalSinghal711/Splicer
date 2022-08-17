@@ -46,8 +46,8 @@ const userControllerMethods = {
     const promiseToLogin = checkUser(userObjectJS);
 
     promiseToLogin
-      .then(async function (userDetails) {
-        response.status(200).json({ message: userDetails });
+      .then(async function (token) {
+        response.cookie('token', token, { httpOnly: true }).send(token);
       })
       .catch((err) => response.status(401).json({ msg: err }));
   },
@@ -69,8 +69,8 @@ const userControllerMethods = {
     const promiseSlip = updateUserModel(userObject, request.params.user_id);
 
     promiseSlip
-      .then((value) => {
-        response.status(200).json({ message: value });
+      .then((token) => {
+        response.cookie('token', token, { httpOnly: true }).send(token);
       })
       .catch((err) => {
         response.status(400).json({ message: err });

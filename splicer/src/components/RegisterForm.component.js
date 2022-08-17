@@ -50,10 +50,10 @@ function RegisterForm() {
       setIsSubmit(true);
       try {
         axios
-          .post("http://localhost:2345/register", formValues)
+          .post(process.env.REACT_APP_REGISTER_URL, formValues)
           .then(({ data, status }) => {
             if (status == 200) {
-              navigator("/app/home", { state: data });
+              navigator("/dashboard/home", { state: data, replace: true });
             } else {
               setFormErrors({ dob: `${data.message}` });
             }
