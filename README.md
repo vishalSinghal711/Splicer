@@ -49,6 +49,9 @@ B2B Connecting Application
 ![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/home%20screen.png)
 
 ---
+## Reponsive Dashboard
+![Responsive Dashboard](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/reponsive%20joined.jpg)
+---
 
 ## Directory Trees of Frontend and Backend
 ![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/directory_trees.jpg)
