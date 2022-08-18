@@ -27,7 +27,6 @@ function App() {
         {/* default path -> navigate to user */}
         <Route path="/" element={<Navigate to="user" replace />}></Route>
 
-        
         {/* /user routes */}
         <Route path="/user" element={<LoginContainer></LoginContainer>}>
           <Route path={`login`} element={<LoginComponent></LoginComponent>} />
@@ -39,24 +38,34 @@ function App() {
           <Route path="" element={<Navigate to="login" replace />}></Route>
         </Route>
 
-        {/* /home routes */}
-        <Route path="/app" element={<HomeContainer></HomeContainer>}>
+        {/* {Application routes} */}
+        {/* Main app route */}
+        <Route path="/dashboard" element={<HomeContainer></HomeContainer>}>
+          {/* home route to show category and sub category */}
           <Route path="home" element={<Home></Home>} />
+          {/* to show favourites */}
           <Route
             path="favourites"
             element={<FavouritesComponent></FavouritesComponent>}
           ></Route>
+          {/* to go to settings */}
           <Route
             path="settings"
             element={<SettingsComponent></SettingsComponent>}
+          ></Route>
+          {/* to go to profile */}
+          <Route
+            path="profile"
+            element={<ProfileComponent></ProfileComponent>}
           ></Route>
           <Route
             path="profile"
             element={<ProfileComponent></ProfileComponent>}
           ></Route>
           {/* default to home */}
-          <Route path="" element={<Navigate to="home" replace />}></Route>
+          <Route path="" element={<Navigate to="dashboard" replace />}></Route>
         </Route>
+
         <Route path="*" element={<NotFound></NotFound>} />
       </Routes>
     </BrowserRouter>

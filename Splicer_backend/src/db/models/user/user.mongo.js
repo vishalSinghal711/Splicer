@@ -3,6 +3,8 @@ const { Schema } = mongoose;
 const bcrypt = require('bcrypt');
 const { isEmail, isNumeric, isAfter, isBefore } = require('validator');
 const { defaultUserImage } = require('../../../constant');
+const responses = require('../../../responses.strings');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new Schema(
   {
@@ -81,6 +83,12 @@ const userSchema = new Schema(
         message: 'User DOB must be after Dec-31-1949 and before current Date',
       },
     },
+
+    //if a user doing some bad work on app like posting abusive reviews
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true },
 );
@@ -117,6 +125,26 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   console.log('methods matchPassword');
   return this.password === enteredPassword;
 };
+userSchema.methods.generateAuthToken = function () {
+  try {
+    const token = jwt.sign(
+      {
+        id: this.user_id,
+        first_name: this.first_name,
+        last_name: this.last_name,
+        gender: this.gender,
+        email_id: this.email_id,
+        phn_no: this.phn_no,
+        profile_pic: this.profile_pic,
+        dob: this.dob,
+      },
+      process.env.JWT_PRIVATE_KEY,
+    );
+    return token;
+  } catch (err) {
+    return err;
+  }
+};
 
 //! statics
 userSchema.statics.addUser = async function (user) {
@@ -136,16 +164,16 @@ userSchema.statics.addUser = async function (user) {
     });
     return userCreated;
   } catch (e) {
-    console.log(e);
+    throw e;
   }
 };
-userSchema.statics.updateUser = async function (vendorObject, id) {
-  const vendorWithID = await this.findOne({ _id: id, user_id: id });
-
-  //! Shallow Merging of updates and existing object
-  const newVendor = { ...vendorWithID._doc, ...vendorObject };
-
-  await this.updateOne({ _id: id }, newVendor, { runValidators: true });
+userSchema.statics.updateUser = async function (userObject, id) {
+  try {
+    await this.updateOne({ _id: id }, userObject, { runValidators: true });
+    return userObject;
+  } catch (err) {
+    return err;
+  }
 };
 
 //! virtuals

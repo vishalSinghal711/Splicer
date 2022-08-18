@@ -4,18 +4,9 @@
 //!requiring model given by mongoose  made on Schema user.mongo.js
 //!enables talking to DB
 const UserModel = require('./user.mongo');
+const responses = require('../../../responses.strings');
 
-const User = function (
-  name,
-  gender,
-  email,
-  phnNo,
-  password,
-  pic,
-  dob,
-  role,
-  userId,
-) {
+const User = function (name, gender, email, phnNo, password, pic, dob, userId) {
   this.user_name = name;
   this.gender = gender;
   this.email_id = email;
@@ -23,7 +14,6 @@ const User = function (
   this.password = password;
   this.profile_pic = pic;
   this.dob = dob;
-  this.role = role;
   this.user_id = userId;
 };
 User.prototype.toUser = async function (user) {
@@ -43,42 +33,8 @@ User.prototype.toUser = async function (user) {
     user['password'],
     user['profile_pic'],
     user['dob'] != '' ? new Date(user['dob']) : '',
-    user['role'],
     newUserNo,
   );
-};
-
-User.prototype.validateUser = function () {
-  var results = '';
-  if (!this.user_name) {
-    results += `User Name Needed\n`;
-  }
-  if (!this.gender) {
-    console.log(this.gender);
-    results += 'Gender Needed\n';
-  }
-  if (!this.email_id) {
-    results += 'Email Needed\n';
-  }
-  if (!this.phn_no) {
-    console.log(this.phn_no);
-    results += 'Phone No Needed\n';
-  }
-  if (!this.password) {
-    results += 'Password Needed\n';
-  }
-  if (!this.dob) {
-    results += 'Dob Needed\n';
-  }
-  if (!this.role) {
-    results += 'Role Needed\n';
-  }
-
-  if (results.length == 0) {
-    return { status: true, results: 'All Set' };
-  } else {
-    return { status: false, results: `${results}` };
-  }
 };
 
 // Add user
@@ -96,12 +52,27 @@ const addUser = function (user) {
 const checkUser = function (reqUser) {
   return new Promise(async (resolve, reject) => {
     try {
-      resolve(
-        await UserModel.findOne(
-          { phn_no: reqUser['phn_no'] },
-          { _id: 0, __v: 0 },
-        ),
+      const user = await UserModel.findOne(
+        { phn_no: reqUser['phn_no'] },
+        { _id: 0, __v: 0 },
       );
+      if (!user) {
+        reject(`${responses.USER_NOT_FOUND}`);
+      }
+      if (!user.status) {
+        reject(`${responses.USER_BLOCKED}`);
+      }
+      const bool = await user.matchPassword(reqUser['password']);
+      if (bool) {
+        try {
+          const jwtToken = await user.generateAuthToken();
+          resolve(jwtToken);
+        } catch (err) {
+          reject(err);
+        }
+      } else {
+        reject(`${responses.INCORRECT_PASSWORD}`);
+      }
     } catch (err) {
       reject(err);
     }
@@ -110,14 +81,24 @@ const checkUser = function (reqUser) {
 
 // Update a user
 const updateUserModel = async function (userObject, id) {
-  const userWithID = await UserModel.findOne({ user_id: id });
-
-  //! Shallow Merging of updates and existing object
-  const newUser = { ...userWithID._doc, ...userObject };
-
   return new Promise(async (resolve, reject) => {
     try {
-      resolve(await UserModel.updateUser(newUser, id));
+      const userWithID = await UserModel.findOne({ _id: id });
+      if (!userWithID) {
+        reject(`${responses.USER_NOT_FOUND}`);
+      }
+      if (!userWithID.status) {
+        reject(`${responses.USER_BLOCKED}`);
+      }
+      //! Shallow Merging of updates and existing object
+      const newUser = { ...userWithID._doc, ...userObject };
+      const user = await UserModel.updateUser(newUser, id);
+      if (user) {
+        const userWithID = await UserModel.findOne({ _id: id });
+        resolve(await userWithID.generateAuthToken());
+      } else {
+        reject(user);
+      }
     } catch (err) {
       reject(err);
     }

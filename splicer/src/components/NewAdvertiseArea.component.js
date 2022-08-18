@@ -12,9 +12,8 @@ export default NewAdvertiseArea
 const NewAdvertise = styled.div`
   width: 100%;
   height: 30vh;
-  background: ;
   display: none;
-  background: green;
+  background: url("https://spinexmusic.com/wp-content/uploads/2021/10/SPINEX-MUSIC.gif");
   opacity: 0.85;
   @media (max-width: 1150px) {
     display: flex;

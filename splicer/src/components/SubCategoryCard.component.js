@@ -11,7 +11,9 @@ function SubCategoryCard(props) {
   const { children } = props;
   return (
     <Card data-aos="fade-up">
-      <ImageDiv></ImageDiv>
+      <ImageDiv>
+        <Img src={children[0].sub_category_image}></Img>
+      </ImageDiv>
       <List>
         <CategoryNameDiv>
           <h4>{children[0].parent_name}</h4>
@@ -55,10 +57,14 @@ const Card = styled.div`
 const ImageDiv = styled.div`
   flex: 2;
   height: 100%;
-  border-style: none;
+
   border-radius: 20px 0 0 20px;
-  background-color: grey;
-  border-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const Img = styled.img`
+  width: 80%;
 `;
 
 const List = styled.div`
@@ -91,7 +97,6 @@ const CategoryNameDiv = styled.div`
   flex: 2;
   width: 100%;
   border-radius: 0 20px 0 0;
-  margin-bottom: 10px;
 `;
 const MoreDiv = styled(CategoryNameDiv)`
   justify-content: start;

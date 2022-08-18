@@ -5,11 +5,13 @@
 //!enables talking to DB
 const VendorModel = require('./vendor.mongo');
 const UserModel = require('../user/user.mongo');
+const responses = require('../../../responses.strings');
 
-const Vendor = function (vendor_id, alt_phn_no, alt_email) {
+const Vendor = function (vendor_id, alt_phn_no, alt_email, timing) {
   (this.vendor_id = vendor_id),
     (this.alt_phn_no = alt_phn_no),
-    (this.alt_email = alt_email);
+    (this.alt_email = alt_email),
+    (this.timing = timing);
 };
 
 Vendor.prototype.toVendor = async function (vendor) {
@@ -21,14 +23,37 @@ Vendor.prototype.toVendor = async function (vendor) {
     newVendorNo = 1;
   }
 
-  return new Vendor(newVendorNo, vendor['alt_phn_no'], vendor['alt_email']);
+  return new Vendor(
+    newVendorNo,
+    vendor['alt_phn_no'],
+    vendor['alt_email'],
+    vendor['timing'],
+  );
 };
 
 // Add vendor
-const addVendor = function (vendor) {
+const addVendor = async function (user_id, vendor) {
   return new Promise(async function (resolve, reject) {
     try {
-      resolve(await VendorModel.addVendor(vendor));
+      //if user is already a vendor
+      let user = await UserModel.findOne({
+        _id: user_id,
+      });
+      if (!user) {
+        reject(`${responses.USER_NOT_FOUND}`);
+      }
+      if (!user.status) {
+        reject(`${responses.USER_BLOCKED}`);
+      }
+
+      if (user.vendor_id != null) {
+        reject('Already a vendor');
+      }
+      const result = await VendorModel.addVendor(vendor);
+
+      user.vendor_id = result.vendor_id;
+      await user.save();
+      resolve(result);
     } catch (err) {
       reject(err);
     }
@@ -37,22 +62,31 @@ const addVendor = function (vendor) {
 
 // Update a vendor
 const updateVendor = async function (vendorObject, user_id) {
-  const userWithID = await UserModel.findOne({ _id: user_id });
-
-  const vendorWithID = await VendorModel.findOne({
-    vendor_id: userWithID.vendor_id,
-  });
-
-  //! Shallow Merging of updates and existing object
-  const newVendor = { ...vendorObject._doc, ...vendorWithID };
-
+  console.log('update vendror', vendorObject, user_id);
   return new Promise(async (resolve, reject) => {
     try {
+      let userWithID = await UserModel.findOne({
+        _id: user_id,
+      });
+      if (!userWithID) {
+        reject(`${responses.USER_NOT_FOUND}`);
+      }
+      if (!userWithID.status) {
+        reject(`${responses.USER_BLOCKED}`);
+      }
+      const vendorWithID = await VendorModel.findOne({
+        vendor_id: userWithID.vendor_id,
+      });
+
+      console.log('qlkdnlkwqneflkwef', vendorWithID);
+
+      //! Shallow Merging of updates and existing object
+      const newVendor = {...vendorWithID._doc, ...vendorObject};
+
       if (userWithID.vendor_id == null) {
-        console.log('insideeeeeeeee');
-        reject('User must be a Vendor');
+        reject(`${responses.USER_MUST_BE_VENDOR_TO_UPDATE_PROFILE}`);
       } else {
-        resolve(await VendorModel.updateVendor(newVendor, id));
+        resolve(await VendorModel.updateVendor(newVendor, vendorWithID._id));
       }
     } catch (err) {
       reject(err);
