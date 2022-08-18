@@ -59,7 +59,7 @@
 
 ---
 ## Reponsive Dashboard
-![Responsive Dashboard](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/reponsive%20joined.jpg)
+![Responsive Dashboard](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/responsive%20joined.jpg)
 ---
 
 ## Directory Trees of Frontend and Backend
