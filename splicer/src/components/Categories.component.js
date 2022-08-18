@@ -18,7 +18,7 @@ export default function Categories() {
         return (
           <CategoryCard key={element.id}>
             <ImageDiv>
-              <p>{element.category_image}</p>
+              <Img src={element.category_image} alt="" />
             </ImageDiv>
             <NameDiv>{<h4>{element.category_name}</h4>}</NameDiv>
           </CategoryCard>
@@ -64,12 +64,19 @@ const CategoryCard = styled.div`
 `;
 
 const ImageDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100%;
   width: 50px;
   background-color: white;
   flex: 1;
   overflow-x: hidden;
   color: orange;
+`;
+const Img = styled.img`
+  height: 93%;
+  width: 93%;
 `;
 const NameDiv = styled.div`
   box-sizing: border-box;
