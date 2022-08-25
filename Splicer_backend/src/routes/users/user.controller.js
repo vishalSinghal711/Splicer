@@ -23,7 +23,10 @@ const userControllerMethods = {
     const promiseToAdd = addUser(reqUser);
     promiseToAdd
       .then((res) => {
-        response.status(201).json({ message: res });
+        response
+          .status(201)
+          .cookie('token', res ,{ httpOnly: true })
+          .json({ token: res });
         // response.status(201).send(res);
       })
       .catch((res) => {
@@ -47,7 +50,9 @@ const userControllerMethods = {
 
     promiseToLogin
       .then(async function (token) {
-        response.cookie('token', token, { httpOnly: true }).send(token);
+        response
+          .cookie('token', token, { httpOnly: true })
+          .json({ token: token });
       })
       .catch((err) => response.status(401).json({ msg: err }));
   },
@@ -70,7 +75,9 @@ const userControllerMethods = {
 
     promiseSlip
       .then((token) => {
-        response.cookie('token', token, { httpOnly: true }).send(token);
+        response
+          .cookie('token', token, { httpOnly: true })
+          .json({ token: token });
       })
       .catch((err) => {
         response.status(400).json({ message: err });

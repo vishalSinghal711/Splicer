@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import NotFoundImage from "../assets/notfound.png";
+import {theme} from '../constants'
 
 const NotFound = () => {
   return (
@@ -16,7 +17,7 @@ const Div = styled.div`
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background: #0d283a;
+  background: ${theme.light_blue};
 `;
 
 const Img = styled.img`

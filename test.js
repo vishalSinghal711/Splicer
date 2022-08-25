@@ -1,4 +1,5 @@
-const UserModel = require("./Splicer_backend/src/db/models/user/user.mongo");
+
+const validator = require('validator');
 
 async function test() {
   // const obj = {
@@ -13,7 +14,7 @@ async function test() {
   // };
   // console.log(JSON.stringify(obj));
 
-  console.log(/^[0-9]+$/.test("123"));
-  console.log(/^[0-9]+$/.test("123f"));
+  console.log(validator.isEmail('vishalsinghal741@gmail.com'))
+  console.log(validator.isEmail("vishalsinghal741@gmail.in"));
 }
 test();

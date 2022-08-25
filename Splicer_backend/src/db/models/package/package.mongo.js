@@ -10,8 +10,8 @@ const packageSchema = new Schema({
     required: [true, 'Package name must be provided'],
   },
   price: {
-    type: String,
-    required: [true, 'user_id required'],
+    type: Number,
+    required: [true, 'Price required'],
     validate: {
       validator: function (value) {
         return /^[0-9]+$/.test(value);

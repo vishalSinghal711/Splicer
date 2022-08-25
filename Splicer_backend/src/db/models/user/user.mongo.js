@@ -130,6 +130,7 @@ userSchema.methods.generateAuthToken = function () {
     const token = jwt.sign(
       {
         id: this.user_id,
+        vendor_id: this.vendor_id,
         first_name: this.first_name,
         last_name: this.last_name,
         gender: this.gender,
@@ -148,7 +149,6 @@ userSchema.methods.generateAuthToken = function () {
 
 //! statics
 userSchema.statics.addUser = async function (user) {
-  console.log('User Came = ', user);
   try {
     const userCreated = await this.create({
       _id: user.user_id,

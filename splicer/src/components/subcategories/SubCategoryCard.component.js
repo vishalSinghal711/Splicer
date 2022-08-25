@@ -80,7 +80,6 @@ const ListItem = styled.p`
   margin-left: 10px;
   fontsize: 16px;
   cursor: pointer;
-  text-decoration: underline;
   margin-top: 20px;
   text-overflow: ellipsis;
   color: white;

@@ -1,28 +1,30 @@
 import React from "react";
 import styled from "styled-components";
-import RegisterForm from './RegisterForm.component';
+import RegisterForm from "./RegisterForm.component";
+import Registerback from "../../assets/5.jpg";
 
 const RegisterComponent = () => {
   return (
-    <><LoginBox>
-      <LogoBox>
-        <Name>
-          <div>
-            <h1 style={{ color: "#fb490e", fontSize: 50 }}>Spli</h1>
-          </div>
-          <div>
-            <h1 style={{ color: "white", fontSize: 50 }}>cer</h1>
-          </div>
-          <Green2></Green2>
-          <Green></Green>
-          <Green2></Green2>
-        </Name>
-      </LogoBox>
-      <FormBox>
-        <RegisterForm></RegisterForm>
-      </FormBox>
-    </LoginBox></>
-
+    <>
+      <LoginBox>
+        <LogoBox>
+          <Name>
+            <div>
+              <h1 style={{ color: "#fb490e", fontSize: 50 }}>Spli</h1>
+            </div>
+            <div>
+              <h1 style={{ color: "white", fontSize: 50 }}>cer</h1>
+            </div>
+            <Green2></Green2>
+            <Green></Green>
+            <Green2></Green2>
+          </Name>
+        </LogoBox>
+        <FormBox>
+          <RegisterForm></RegisterForm>
+        </FormBox>
+      </LoginBox>
+    </>
   );
 };
 
@@ -30,6 +32,7 @@ const LoginBox = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: #0b1d2c;
+  background-image: url(${Registerback});
   display: flex;
 `;
 
@@ -39,7 +42,6 @@ const FormBox = styled.div`
   align-items: center;
   flex: 2;
   height: 100%;
-  background-color: #0b1d2c;
   display: flex;
 `;
 const LogoBox = styled.div`
@@ -47,7 +49,6 @@ const LogoBox = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: #0d283a;
   display: flex;
 `;
 

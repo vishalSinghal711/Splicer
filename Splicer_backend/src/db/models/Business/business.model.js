@@ -43,8 +43,8 @@ Business.prototype.toBusiness = async function (business) {
     business['name'],
     business['category'],
     business['address'],
-    business['product_image'],
-    business['address_image'],
+    business['product_images'],
+    business['address_images'],
     business['address_latitude'],
     business['address_longitude'],
     business['age'],
@@ -60,12 +60,15 @@ const addBusiness = function (business, user_id) {
 
       if (!user) {
         reject(`${responses.USER_NOT_FOUND}`);
+        return;
       } else {
         if (!user.status) {
           reject(`${responses.USER_BLOCKED}`);
+          return;
         }
         if (user.vendor_id == null) {
           reject(`${responses.USER_MUST_BE_VENDOR_TO_ADD_BUSINESS}`);
+          return;
         } else {
           let vendor = await VendorModel.findOne({ _id: user.vendor_id });
           if (vendor) {
@@ -100,12 +103,15 @@ const updateBusiness = async function (businessObject, user_id, businessId) {
       const userWithId = await UserModel.findOne({ _id: user_id });
       if (!userWithId) {
         reject(`${responses.USER_NOT_FOUND}`);
+        return;
       }
       if (!userWithId.status) {
         reject(`${responses.USER_BLOCKED}`);
+        return;
       }
       if (!userWithId.vendor_id) {
         reject(`${responses.USER_MUST_BE_VENDOR_TO_UPDATE_BUSINESS}`);
+        return;
       }
       const vendorWithId = await VendorModel.findOne({
         _id: userWithId.vendor_id,
@@ -116,6 +122,7 @@ const updateBusiness = async function (businessObject, user_id, businessId) {
           reject(
             `${responses.USER_MUST_HAVE_ATLEAST_ONE_BUSINESS_TO_UPDATE_BUSINESS}`,
           );
+          return;
         }
         if (businesses.includes(businessId)) {
           try {
@@ -127,9 +134,11 @@ const updateBusiness = async function (businessObject, user_id, businessId) {
           }
         } else {
           reject(`${responses.BUSINESS_NOT_BELONGS_TO_VENDOR}`);
+          return;
         }
       } else {
         reject(`${responses.USER_MUST_BE_VENDOR_TO_UPDATE_BUSINESS}`);
+        return;
       }
 
       if (vendorWithId) {
@@ -144,6 +153,7 @@ const updateBusiness = async function (businessObject, user_id, businessId) {
           );
         } else {
           reject('No Business Exist');
+          return;
         }
       }
     } catch (err) {

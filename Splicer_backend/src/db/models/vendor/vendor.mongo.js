@@ -22,7 +22,6 @@ const vendorSchema = new Schema(
     //business phn No
     alt_phn_no: {
       type: String,
-      unique: true,
       trim: true,
       minLength: [10, 'Phone Number must be of Length 10'],
       maxLength: [10, 'Phone Number must be of Length 10'],
@@ -135,13 +134,26 @@ vendorSchema.methods.matchPassword = async function (enteredPassword) {
 //! statics
 vendorSchema.statics.addVendor = async function (vendor) {
   try {
-    const vendorCreated = await this.create({
+    //this is becoz maybe user dont enter alt emial, phn etc
+
+    let obj = {
       _id: vendor.vendor_id,
       vendor_id: vendor.vendor_id,
-      alt_email_id: vendor.alt_email_id,
-      alt_phn_no: vendor.alt_phn_no,
-      timing: vendor.timing,
-    });
+    };
+
+    if (vendor.alt_email) {
+      obj['alt_email'] = vendor.alt_email;
+    }
+    if (vendor.alt_phn_no) {
+      obj['alt_phn_no'] = vendor.alt_phn_no;
+    }
+    if (vendor.vendor_about) {
+      obj['vendor_about'] = vendor.vendor_about;
+    }
+    if (vendor.timing) {
+      obj['timing'] = vendor.timing;
+    }
+    const vendorCreated = await this.create(obj);
     return vendorCreated;
   } catch (e) {
     throw e;

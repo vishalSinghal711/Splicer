@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/Header.component";
-
+import { useLocation } from "react-router-dom";
 
 const HomeContainer = () => {
   return (

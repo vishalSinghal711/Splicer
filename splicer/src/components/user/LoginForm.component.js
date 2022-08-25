@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import jwt from "jwt-decode";
 
 function LoginForm() {
   const phn_no = useRef();
@@ -30,24 +31,30 @@ function LoginForm() {
     // setIsSubmit(true);
     if (!errors["phn_no"] && !errors["password"]) {
       setIsSubmit(true);
-      try {
-        axios
-          .post(process.env.REACT_APP_LOGIN_URL, formValues)
-          .then(({ data, status }) => {
-            if (status == 200) {
-              navigator("/dashboard/home", { replace: true, state: data });
-            } else {
-              setFormErrors({ password: `${data.message}` });
-            }
 
-            setIsSubmit(false);
-          })
-          .catch((ex) => {
-            window.alert(ex.message);
-          });
-      } catch (e) {
-        window.alert(e.message);
-      }
+      //error handler
+      axios.interceptors.response.use(
+        (response) => {
+          return response;
+        },
+        (error) => {
+          setFormErrors({ password: `${error.response.data.msg}` });
+          setIsSubmit(false);
+          return error;
+        }
+      );
+      //requesting to login
+      axios
+        .post(process.env.REACT_APP_LOGIN_URL, formValues)
+        .then(({ data, status }) => {
+          if (status == 200) {
+            localStorage.setItem("token", data["token"]);
+            localStorage.setItem("user", JSON.stringify(jwt(data["token"])));
+            navigator("/dashboard/home", { replace: true });
+          } else {
+            //will be handled by interceptor
+          }
+        });
     } else {
       setFormErrors(errors);
     }
@@ -107,7 +114,7 @@ function LoginForm() {
 
   return isSubmit ? (
     isRejected ? (
-      <div></div>
+      <div>Rejected</div>
     ) : (
       <Loader></Loader>
     )
@@ -165,7 +172,7 @@ function LoginForm() {
         </Maybe>
         <Register
           onClick={() => {
-            navigator("/user/register");
+            navigator("/user/register", { replace: true });
           }}
         >
           Register
@@ -181,10 +188,13 @@ const H1 = styled.h1`
 
 const MainFormDiv = styled.div`
   padding: 20px;
-  background: #0d283a;
+  background: rgba(12, 34, 44, 0.47);
   @media (max-width: 950px) {
     width: 70%;
   }
+  border-style: solid;
+  border-color: rgba(80, 80, 100, 0.2);
+  box-shadow: 7px 7px 5px 15px rgba(80, 80, 100, 0.2);
   width: 50%;
   border-radius: 20px;
   display: flex;

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import Categories from "./Categories.component";
-import SubCategories from "./SubCategories.component";
+import Categories from "./categories/Categories.component";
+import SubCategories from "./subcategories/SubCategories.component";
 
 function Section() {
   return (

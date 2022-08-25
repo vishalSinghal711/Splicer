@@ -8,12 +8,15 @@ import HomeContainer from "./container/Home.container";
 import { Home } from "./components/Home.Component";
 import FavouritesComponent from "./components/Favourites.component";
 import SettingsComponent from "./components/Settings.component";
-import ProfileComponent from "./components/Profile.component";
+import ProfileComponent from "./components/user/Profile.component";
 import LoginContainer from "./container/Login.container";
-import LoginComponent from "./components/Login.component";
-import RegisterComponent from "./components/Register.component";
+import LoginComponent from "./components/user/Login.component";
+import RegisterComponent from "./components/user/Register.component";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NotFound from "./container/NotFound.Page";
+import Splash from "./container/Splash.container";
+import RegisterVendor from "./components/vendor/Register.vendor.component";
+import PaymentParent from "./components/transactions/PaymentParent.component";
 
 function App() {
   //! Nothing but fancy and easy way of writing [React.createElement (pure Js , ECMA5 , known to browser)]
@@ -25,7 +28,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* default path -> navigate to user */}
-        <Route path="/" element={<Navigate to="user" replace />}></Route>
+        <Route path="/" element={<Splash></Splash>}></Route>
 
         {/* /user routes */}
         <Route path="/user" element={<LoginContainer></LoginContainer>}>
@@ -63,8 +66,20 @@ function App() {
             element={<ProfileComponent></ProfileComponent>}
           ></Route>
           {/* default to home */}
-          <Route path="" element={<Navigate to="dashboard" replace />}></Route>
+          <Route path="" element={<Navigate to="home" replace />}></Route>
         </Route>
+
+        {/* Register vendor */}
+        <Route
+          path="/vendor/register"
+          element={<RegisterVendor></RegisterVendor>}
+        />
+
+        {/* Payment vendor */}
+        <Route
+          path="/vendor/payment"
+          element={<PaymentParent></PaymentParent>}
+        />
 
         <Route path="*" element={<NotFound></NotFound>} />
       </Routes>
