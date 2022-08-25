@@ -1,5 +1,5 @@
 const { registerBusiness, updateBusiness } = require('./business.controller');
-
+const jwt = require('jsonwebtoken')
 // User Route
 // Whenever server get user related requests -> this route takes control
 
@@ -11,9 +11,29 @@ const router = express.Router({});
 
 // Post request made by user to register for vendor with id
 //if /register type request will be made this will take control
-router.post('/business/register/:user_id', registerBusiness);
+router.post('/business/register/', authenticateToken  ,registerBusiness);
 
 //PATCH is a method of modifying resources where the client sends partial data that is to be updated without modifying the entire data.
 router.patch('/business/update/:user_id/:business_id', updateBusiness);
+
+function authenticateToken(req, res, next) {
+
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  //const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: 'Not Authorized' });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    req.params.user_id = decoded.id;
+    next();
+  } catch (er) {
+    // console.log("err", er);
+    //Incase of expired jwt or invalid token kill the token and clear the cookie
+    res.clearCookie('token');
+    return res.status(400).send(er.message);
+  }
+}
 
 module.exports = router;

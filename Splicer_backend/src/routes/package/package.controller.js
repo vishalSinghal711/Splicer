@@ -1,6 +1,7 @@
 const { NOT_AUTHORISED } = require('../../responses.strings');
 const {
   processPackageCreation,
+  getAllPackages,
 } = require('../../db/models/package/package.model');
 const packageControllerMethods = {
   createPackage: function (request, response) {
@@ -9,7 +10,7 @@ const packageControllerMethods = {
       response.status(400).json({ message: NOT_AUTHORISED });
     }
 
-        const package = request.body;
+    const package = request.body;
     const promiseSlip = processPackageCreation(package);
     promiseSlip
       .then((res) => {
@@ -17,6 +18,16 @@ const packageControllerMethods = {
       })
       .catch((err) => {
         response.status(400).json({ message: err.message });
+      });
+  },
+  getPackages: function (request, response) {
+    const promiseSlip = getAllPackages();
+    promiseSlip
+      .then((result) => {
+        response.status(200).json({ message: result });
+      })
+      .catch((err) => {
+        response.status(400).json({ message: err });
       });
   },
 };

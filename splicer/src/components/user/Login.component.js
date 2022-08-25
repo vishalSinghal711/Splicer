@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import LoginForm from "../components/LoginForm.component";
+import LoginForm from "./LoginForm.component";
+import Loginback from "../../assets/7.jpg";
+
 
 const LoginComponent = () => {
   return (
@@ -31,19 +33,16 @@ const LoginComponent = () => {
 const LoginBox = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #0b1d2c;
   display: flex;
-  
+  background-image: url(${Loginback});
 `;
 
 const FormBox = styled.div`
-
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 2;
   height: 100%;
-  background-color: #0b1d2c;
   display: flex;
 `;
 
@@ -52,7 +51,7 @@ const LogoBox = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: #0d283a;
+
   display: flex;
 `;
 

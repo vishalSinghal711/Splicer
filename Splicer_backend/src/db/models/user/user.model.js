@@ -41,7 +41,9 @@ User.prototype.toUser = async function (user) {
 const addUser = function (user) {
   return new Promise(async function (resolve, reject) {
     try {
-      resolve(await UserModel.addUser(user));
+      const userGot = await UserModel.addUser(user);
+      const jwtToken = await userGot.generateAuthToken();
+      resolve(jwtToken);
     } catch (err) {
       reject(err);
     }
@@ -58,20 +60,25 @@ const checkUser = function (reqUser) {
       );
       if (!user) {
         reject(`${responses.USER_NOT_FOUND}`);
+        return;
       }
       if (!user.status) {
         reject(`${responses.USER_BLOCKED}`);
+        return;
       }
       const bool = await user.matchPassword(reqUser['password']);
       if (bool) {
         try {
           const jwtToken = await user.generateAuthToken();
           resolve(jwtToken);
+          return;
         } catch (err) {
           reject(err);
+          return;
         }
       } else {
         reject(`${responses.INCORRECT_PASSWORD}`);
+        return;
       }
     } catch (err) {
       reject(err);
@@ -86,9 +93,11 @@ const updateUserModel = async function (userObject, id) {
       const userWithID = await UserModel.findOne({ _id: id });
       if (!userWithID) {
         reject(`${responses.USER_NOT_FOUND}`);
+        return;
       }
       if (!userWithID.status) {
         reject(`${responses.USER_BLOCKED}`);
+        return;
       }
       //! Shallow Merging of updates and existing object
       const newUser = { ...userWithID._doc, ...userObject };
@@ -96,11 +105,14 @@ const updateUserModel = async function (userObject, id) {
       if (user) {
         const userWithID = await UserModel.findOne({ _id: id });
         resolve(await userWithID.generateAuthToken());
+        return;
       } else {
         reject(user);
+        return;
       }
     } catch (err) {
       reject(err);
+      return;
     }
   });
 };

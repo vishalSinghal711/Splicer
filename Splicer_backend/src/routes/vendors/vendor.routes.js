@@ -1,4 +1,8 @@
-const { registerVendor, updateVendor } = require('./vendor.controller');
+const {
+  registerVendor,
+  updateVendor,
+  getBusinessCount,
+} = require('./vendor.controller');
 const jwt = require('jsonwebtoken');
 // User Route
 // Whenever server get user related requests -> this route takes control
@@ -13,6 +17,9 @@ const router = express.Router({});
 //if /register type request will be made this will take control
 router.post('/vendor/register/', authenticateToken, registerVendor);
 
+//GET request to get all the business count of particular user
+router.get('/vendor/businesses', authenticateToken, getBusinessCount);
+
 //PATCH is a method of modifying resources where the client sends partial data that is to be updated without modifying the entire data.
 router.patch('/vendor/profile/update/', authenticateToken, updateVendor);
 
@@ -21,7 +28,6 @@ function authenticateToken(req, res, next) {
   const token = authHeader && authHeader.split(' ')[1];
 
   //const token = req.cookies.token;
-  console.log('Token', authHeader);
   if (!token) return res.status(401).json({ message: 'Not Authorized' });
 
   try {

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import jwt from "jwt-decode";
 
 function RegisterForm() {
   const name = useRef();
@@ -14,13 +15,13 @@ function RegisterForm() {
   const navigator = useNavigate();
 
   const initialValues = {
+    name: "",
+    gender: "M",
+    email_id: "",
     phn_no: "",
     password: "",
-    name: "",
-    gender: "Male",
-    email_id: "",
+    profile_pic: "",
     dob: "",
-    role: "user",
   };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
@@ -44,28 +45,36 @@ function RegisterForm() {
       !errors["name"] &&
       !errors["gender"] &&
       !errors["email_id"] &&
-      !errors["dob"] &&
-      !errors["role"]
+      !errors["dob"]
     ) {
       setIsSubmit(true);
-      try {
-        axios
-          .post(process.env.REACT_APP_REGISTER_URL, formValues)
-          .then(({ data, status }) => {
-            if (status == 200) {
-              navigator("/dashboard/home", { state: data, replace: true });
-            } else {
-              setFormErrors({ dob: `${data.message}` });
-            }
-
+      //error handler
+      axios.interceptors.response.use(
+        (response) => {
+          return response;
+        },
+        (error) => {
+          console.dir(error);
+          setFormErrors({ dob: `${error.response.data.message}` });
+          setIsSubmit(false);
+          return error;
+        }
+      );
+      //requesting to login
+      axios
+        .post(process.env.REACT_APP_REGISTER_URL, formValues)
+        .then(({ data, status }) => {
+          if (status == 201) {
+            localStorage.setItem("token", data["token"]);
+            localStorage.setItem("user", JSON.stringify(jwt(data["token"])));
+            navigator("/dashboard/home", {
+              replace: true,
+            });
             setIsSubmit(false);
-          })
-          .catch((ex) => {
-            window.alert(ex.message);
-          });
-      } catch (e) {
-        window.alert(e.message);
-      }
+          } else {
+            setIsSubmit(false);
+          }
+        });
     } else {
       setFormErrors(errors);
     }
@@ -136,14 +145,12 @@ function RegisterForm() {
     return errors;
   };
   const password_Validator = (values) => {
-    //setIsSubmit(false);
-
     const errors = {};
 
     if (!values) {
       errors.password = "Password is required";
-    } else if (values.length < 4) {
-      errors.password = "Password must be more than 4 characters";
+    } else if (values.length < 6) {
+      errors.password = "Password must be more than 6 characters";
     } else if (values.length > 10) {
       errors.password = "Password cannot exceed more than 10 characters";
     }
@@ -275,9 +282,9 @@ function RegisterForm() {
                 setFormValues({ ...formValues, gender: val });
               }}
             >
-              <Option value="Male">Male</Option>
-              <Option value="Female">Female</Option>
-              <Option value="No Select">No Select</Option>
+              <Option value="M">Male</Option>
+              <Option value="F">Female</Option>
+              <Option value="NA">No Select</Option>
             </Select>
             <ErrorText>{formErrors.gender}</ErrorText>
           </FieldDiv>
@@ -310,8 +317,10 @@ function RegisterForm() {
               placeholder="Enter your Date of Birth"
               onChange={(dob) => {
                 const val = dob.target.value;
+                const arr = val.split("-");
+                var string = `${arr[1]}/${arr[2]}/${arr[0]}`;
                 dobValidator(val);
-                setFormValues({ ...formValues, dob: val });
+                setFormValues({ ...formValues, dob: string });
               }}
             />
             <ErrorText>{formErrors.dob}</ErrorText>
@@ -320,6 +329,13 @@ function RegisterForm() {
           <Submit>Submit</Submit>
         </InsideForm>
       </Form>
+      <Back
+        onClick={() => {
+          navigator("/user/login", { replace: true });
+        }}
+      >
+        Login
+      </Back>
     </MainFormDiv>
   );
 }
@@ -330,11 +346,14 @@ const H1 = styled.h1`
 
 const MainFormDiv = styled.div`
   padding: 20px;
-  background: #0d283a;
+
   width: 50%;
   @media (max-width: 950px) {
     width: 70%;
   }
+  border-style: solid;
+  border-color: rgba(80, 80, 100, 0.2);
+  box-shadow: 7px 7px 5px 15px rgba(80, 80, 100, 0.2);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -397,6 +416,17 @@ const Submit = styled.button`
   padding-right: 30px;
   margin: 12px 12px 0px 10px;
   color: #fff;
+`;
+const Back = styled.button`
+  background: #0d283a;
+  border: none;
+  padding: 5px;
+  margin: 12px 12px 0px 10px;
+  color: #fff;
+  &:hover {
+    color: #fb490e;
+  }
+  cursor: pointer;
 `;
 
 const Label = styled.label`

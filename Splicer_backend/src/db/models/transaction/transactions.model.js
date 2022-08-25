@@ -81,13 +81,13 @@ const subscribePackageProcess = function (userId, packageId) {
 };
 
 const confirmSignature = function (payment_id, signature, t_id) {
-  console.log('INNNNNNNNNNNNN');
+ 
   return new Promise(async (resolve, reject) => {
     try {
       let transaction = await TransactionModel.findOne({ _id: t_id });
-      console.log('Transctions = ', transaction);
       if (!transaction) {
         reject(NO_TRANSACTION_EXIST);
+        return;
       }
       transaction.payment_id = payment_id;
 
@@ -95,16 +95,20 @@ const confirmSignature = function (payment_id, signature, t_id) {
         await transaction.save();
       } catch (err) {
         reject(err);
+        return;
       }
 
       let isMatched = await transaction.matchSignature(payment_id, signature);
       if (isMatched) {
         resolve(isMatched);
+        return;
       } else {
         reject(isMatched);
+        return;
       }
     } catch (err) {
       reject(err);
+      return;
     }
   });
 };

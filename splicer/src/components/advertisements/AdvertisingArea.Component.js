@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {theme} from "../../constants";
 
 export function AdvertisingAreaFun(props) {
   return <AdvertisingArea></AdvertisingArea>;

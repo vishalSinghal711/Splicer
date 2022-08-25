@@ -6,6 +6,7 @@ const {
   Vendor,
   addVendor,
   updateVendor,
+  getBusinesses,
 } = require('../../db/models/vendor/vendor.model');
 const responses = require('../../responses.strings');
 
@@ -61,6 +62,23 @@ const vendorControllerMethods = {
       .catch((err) => {
         response.status(400).json({ message: err });
       });
+  },
+
+  getBusinessCount: async function (req, res) {
+    var userId = req.params.user_id;
+    if (!Number(userId)) {
+      res.status(400).json({ message: `${responses.PARAMETER_NOT_NUMBER}` });
+      return;
+    } else {
+      const promiseSlip = getBusinesses(userId);
+      promiseSlip
+        .then((count) => {
+          res.status(200).json({ message: count });
+        })
+        .catch((err) => {
+          res.status(400).json({ message: err.message });
+        });
+    }
   },
 };
 
