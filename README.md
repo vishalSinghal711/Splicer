@@ -38,30 +38,30 @@
 # Some Images
 
 ## Register Form with validations
-![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/registration_Joined.jpg)
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/registration_Joined.jpg)
 ## Login Form with validations
-![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/login%20joined.jpg)
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/login%20joined.jpg)
 
 ---
 
 ## No Route
-![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/no%20route.png)
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/no%20route.png)
 
 ## loader 
-![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/onSubmitLoader.png)
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/onSubmitLoader.png)
 
 ---
 
 # Dashboard
 
 ## home
-![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/home%20screen.png)
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/home%20screen.png)
 
 ---
 ## Reponsive Dashboard
-![Responsive Dashboard](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/responsive%20joined.jpg)
+![Responsive Dashboard](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/responsive%20joined.jpg)
 ---
 
 ## Directory Trees of Frontend and Backend
-![alt text](https://github.com/vishalSinghal711/Splicer/blob/vendorFunctionalities/Resources/Images%20Splicer/directory_trees.jpg)
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/directory_trees.jpg)
 
