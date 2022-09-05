@@ -37,16 +37,19 @@
 
 # Some Images
 
-## Register Form with validations
-![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/registration_Joined.jpg)
-## Login Form with validations
-![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/login%20joined.jpg)
 
----
+## Loading Screen
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/Loading%20Screen.png)
 
 ## No Route
 ![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/no%20route.png)
 
+---
+
+## Register Form with validations
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/registration_Joined.jpg)
+## Login Form with validations
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/login%20joined.jpg)
 ## loader 
 ![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/onSubmitLoader.png)
 
@@ -57,11 +60,39 @@
 ## home
 ![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/home%20screen.png)
 
----
 ## Reponsive Dashboard
 ![Responsive Dashboard](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/responsive%20joined.jpg)
+
+## Profile Card
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/Profile%20Info%20Card.png)
 ---
 
-## Directory Trees of Frontend and Backend
+# Listing
+
+## Vendor Information Form with Validation
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/Vendor%20Form%20Joined.jpg)
+
+## Business Add Form with validation
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/BusinessFormJoined.jpg)
+
+## Business Add Form Filled with Dynamic Images Adding Feature
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/BusinessForm_dynamic_add.jpg)
+
+## Reminder Pop up
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/Pop%20up%20.png)
+
+--- 
+
+# Payment
+
+## Select Subscription Plans
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/Select%20Package.png)
+
+## Payment Gateway Razorpay
+![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/Razorpay%20Pay%20Screen.png)
+
+---
+
+# Directory Trees of Frontend and Backend
 ![alt text](https://github.com/vishalSinghal711/Splicer/blob/master/Resources/Images%20Splicer/directory_trees.jpg)
 
